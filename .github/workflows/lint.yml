@@ -20,3 +20,5 @@ jobs:
           node-version: 20
       - name: Run Prettier
         run: git diff --name-only --diff-filter=ACMRT origin/main HEAD | xargs -r npx prettier --check --ignore-unknown
+      - name: Run ESLint
+        run: git diff --name-only --diff-filter=ACMRT origin/main HEAD | xargs -r npx eslint --check --ignore-unknown
