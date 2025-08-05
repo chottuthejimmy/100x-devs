@@ -4,13 +4,15 @@
 //      - fs.readFile
 
 //a. setTimeout
+//normal way
+setTimeout(() => console.log("normal timeout"), 1000)
 function greet() {
   console.log("hey there");
-  return;
+  return 1;
 }
 
 function promisifiedSetTimeout(time) {
-  return new Promise((resolve, reject) => setTimeout(resolve, time));
+  return new Promise((resolve, reject) => setTimeout(resolve(), time));
 }
 
 promisifiedSetTimeout(1000).then(greet);
@@ -31,7 +33,7 @@ const promisifiedReadFile = (file) =>
     })
   );
 
-const a = "./week-2/a.txt";
+const a = "./week-2/2.1/a.txt";
 
 promisifiedReadFile(a).then(console.log).catch(console.log);
 
