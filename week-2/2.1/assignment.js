@@ -5,7 +5,7 @@
 
 //a. setTimeout
 //normal way
-setTimeout(() => console.log("normal timeout"), 1000)
+setTimeout(() => console.log("normal timeout"), 1000);
 function greet() {
   console.log("hey there");
   return 1;
@@ -30,7 +30,7 @@ const promisifiedReadFile = (file) =>
         console.log("error finding the file");
         reject(err);
       } else resolve(data);
-    })
+    }),
   );
 
 const a = "./week-2/2.1/a.txt";

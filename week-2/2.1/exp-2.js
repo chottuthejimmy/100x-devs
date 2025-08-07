@@ -1,10 +1,10 @@
-function timeout(i){
-    console.log("hi from", i);
+function timeout(i) {
+  console.log("hi from", i);
 }
 
-for (let i=10; i>0; i--){
-    console.log("i is: ",i);
-    setTimeout(() =>timeout(i), i*1000);
+for (let i = 10; i > 0; i--) {
+  console.log("i is: ", i);
+  setTimeout(() => timeout(i), i * 1000);
 }
 
 // ------------------------------------
@@ -17,7 +17,7 @@ function nah() {
   console.log("nah");
 }
 
-setTimeout(()=> console.log("ah"), 0);
+setTimeout(() => console.log("ah"), 0);
 
 const promise = new Promise((resolve, reject) => {
   if (random) {
@@ -27,16 +27,18 @@ const promise = new Promise((resolve, reject) => {
   }
 });
 
-promise.then(_ => console.log("inside then")).catch(_ => console.log("inside catch"));
- console.log("sup");
+promise
+  .then((_) => console.log("inside then"))
+  .catch((_) => console.log("inside catch"));
+console.log("sup");
 
- /**
-  * OUTPUT :
-  * yay or nah depending on whether random is true or false, the executor function is executed asynchronously 
-  * sup
-  * inside then / inside catch
-  * ah
-  * 
-  */
+/**
+ * OUTPUT :
+ * yay or nah depending on whether random is true or false, the executor function is executed asynchronously
+ * sup
+ * inside then / inside catch
+ * ah
+ *
+ */
 
- // ------------------------------
+// ------------------------------
