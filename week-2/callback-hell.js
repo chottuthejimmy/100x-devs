@@ -28,7 +28,7 @@ const setTimeoutPromisified = (duration) => {
 };
 
 function output(str) {
-    console.log(str);
+  console.log(str);
 }
 
 setTimeoutPromisified(1000)
@@ -37,7 +37,6 @@ setTimeoutPromisified(1000)
   .then(() => output("hello"))
   .then(() => setTimeoutPromisified(5000))
   .then(() => output("hello there"));
-
 
 // -------------
 

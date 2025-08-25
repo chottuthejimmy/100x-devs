@@ -22,6 +22,6 @@ const id = setInterval(() => {
 }, 500);
 
 console.log("before calls");
-A();            // returns a Promise immediately
-B();            // returns a Promise immediately
+A(); // returns a Promise immediately
+B(); // returns a Promise immediately
 console.log("after calls");
