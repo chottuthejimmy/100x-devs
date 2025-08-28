@@ -29,42 +29,94 @@
     </div>
   </body>
   <script>
-    let counter = 1;
-    const inputEl = document.getElementById("input-el");
-    const orderEl = document.getElementById("ordered-el");
-    function addToDo() {
-      const newEl = document.createElement("div");
-      newEl.innerHTML = `<div id="${counter}">${counter}. ${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${counter})">Delete</button> </div>`;
-      document.querySelector("body").appendChild(newEl);
-      counter++;
-    }
+  let nextId = 1;
+  const inputEl = document.getElementById("input-el");
+  const orderEl = document.getElementById("ordered-el");
 
-    function addToDo2() {
-      orderEl.innerHTML += `<li id="${counter}"><div> ${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${counter})">Delete</button> <button style="margin-left: 10px" onclick="appendToDo(${counter})">Append</button> </div></li>`;
-      inputEl.value = "";
-      counter++;
-      const el = document.getElementById("1");
-      console.log(el);
+  function getTodos() {
+    try {
+      return JSON.parse(localStorage.getItem("todos") || "[]");
+    } catch (_) {
+      return [];
     }
+  }
 
-    function deleteToDo(id) {
-      const el = document.getElementById(id);
-      el.parentNode.removeChild(el);
-      counter--;
-    }
+  function setTodos(todos) {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
 
-    function appendToDo(id) {
-      const el = document.getElementById(id);
-      const todoText = el.firstChild.firstChild.textContent.trim();
-      el.firstChild.innerHTML = `<input type="text" value="${todoText}" id="input-${id}"/> <button style="margin-left: 10px" onclick="deleteToDo(${id})">Delete</button> <button style="margin-left: 10px" onclick="saveAppendToDo(${id})">Save</button>`;
-      document.getElementById(`input-${id}`).select();
-    }
-    
+  function computeNextId(todos) {
+    if (!todos.length) return 1;
+    return Math.max(...todos.map(t => t.id)) + 1;
+  }
 
-    function saveAppendToDo(id) {
-      const inputEl = document.getElementById(`input-${id}`);
-      const el = document.getElementById(id);
-      el.firstChild.innerHTML = `${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${id})">Delete</button> <button style="margin-left: 10px" onclick="appendToDo(${id})">Append</button>`;
-    }
-  </script>
+  function renderTodos() {
+    const todos = getTodos();
+    orderEl.innerHTML = todos
+      .map(t => (
+        `<li id="${t.id}"><div>${escapeHtml(t.text)} ` +
+        `<button style="margin-left: 10px" onclick="deleteToDo(${t.id})">Delete</button> ` +
+        `<button style="margin-left: 10px" onclick="startEdit(${t.id})">Edit</button>` +
+        `</div></li>`
+      ))
+      .join("");
+    nextId = computeNextId(todos);
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function addToDo2() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    const todos = getTodos();
+    todos.push({ id: nextId, text });
+    setTodos(todos);
+    inputEl.value = "";
+    nextId++;
+    renderTodos();
+  }
+
+  function deleteToDo(id) {
+    const todos = getTodos().filter(t => t.id !== id);
+    setTodos(todos);
+    renderTodos();
+  }
+
+  function startEdit(id) {
+    const el = document.getElementById(id);
+    const todos = getTodos();
+    const t = todos.find(x => x.id === id);
+    if (!t) return;
+    el.firstChild.innerHTML =
+      `<input type="text" value="${escapeHtml(t.text)}" id="input-${id}"/> ` +
+      `<button style=\"margin-left: 10px\" onclick=\"deleteToDo(${id})\">Delete</button> ` +
+      `<button style=\"margin-left: 10px\" onclick=\"saveEdit(${id})\">Save</button>`;
+    const inp = document.getElementById(`input-${id}`);
+    if (inp) inp.select();
+  }
+
+  function saveEdit(id) {
+    const inp = document.getElementById(`input-${id}`);
+    if (!inp) return;
+    const todos = getTodos();
+    const idx = todos.findIndex(t => t.id === id);
+    if (idx === -1) return;
+    todos[idx].text = inp.value.trim();
+    setTodos(todos);
+    renderTodos();
+  }
+
+  // Bootstrap from storage on load
+  document.addEventListener("DOMContentLoaded", () => {
+    renderTodos();
+    inputEl?.focus();
+  });
+</script>
 </html>
