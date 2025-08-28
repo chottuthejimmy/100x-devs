@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Simple TODO</title>
+    <style>
+      #ordered-el {
+        display: inline-block;
+        flex-direction: column;
+        text-align: start;
+      }
+      #ordered-el li {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h1 style="text-align: center">Todo list</h1>
+      <div style="text-align: center">
+        <input type="text" id="input-el" style="margin-bottom: 20px" autofocus/>
+        <button onclick="addToDo2()">Add Todo</button>
+      </div>
+      <div style="text-align: center;">
+        <ol id="ordered-el"></ol>
+      </div>
+    </div>
+  </body>
+  <script>
+    let counter = 1;
+    const inputEl = document.getElementById("input-el");
+    const orderEl = document.getElementById("ordered-el");
+    function addToDo() {
+      const newEl = document.createElement("div");
+      newEl.innerHTML = `<div id="${counter}">${counter}. ${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${counter})">Delete</button> </div>`;
+      document.querySelector("body").appendChild(newEl);
+      counter++;
+    }
+
+    function addToDo2() {
+      orderEl.innerHTML += `<li id="${counter}"><div> ${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${counter})">Delete</button> <button style="margin-left: 10px" onclick="appendToDo(${counter})">Append</button> </div></li>`;
+      inputEl.value = "";
+      counter++;
+      const el = document.getElementById("1");
+      console.log(el);
+    }
+
+    function deleteToDo(id) {
+      const el = document.getElementById(id);
+      el.parentNode.removeChild(el);
+      counter--;
+    }
+
+    function appendToDo(id) {
+      const el = document.getElementById(id);
+      const todoText = el.firstChild.firstChild.textContent.trim();
+      el.firstChild.innerHTML = `<input type="text" value="${todoText}" id="input-${id}"/> <button style="margin-left: 10px" onclick="deleteToDo(${id})">Delete</button> <button style="margin-left: 10px" onclick="saveAppendToDo(${id})">Save</button>`;
+      document.getElementById(`input-${id}`).select();
+    }
+    
+
+    function saveAppendToDo(id) {
+      const inputEl = document.getElementById(`input-${id}`);
+      const el = document.getElementById(id);
+      el.firstChild.innerHTML = `${inputEl.value} <button style="margin-left: 10px" onclick="deleteToDo(${id})">Delete</button> <button style="margin-left: 10px" onclick="appendToDo(${id})">Append</button>`;
+    }
+  </script>
+</html>
